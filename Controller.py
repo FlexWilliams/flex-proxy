@@ -1,16 +1,27 @@
+import logging
+import requests
 from flask import Flask, abort, request
-app = Flask(__name__)
+from flask_cors import CORS
 
-@app.route('/', methods = [ 'GET' ])
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/food-search', methods = [ 'GET' ])
 def get():
-    url = request.args.get('url')
-    if url is None or url == "":
+    food = request.args.get('food')
+    if food is None or food == "":
         return abort(400)
-    else:
-        return url
-    
-    # r = requests.get(url)
-    # return r.text
+    else:        
+        url = 'https://api.nal.usda.gov/fdc/v1/search?api_key=L196LsvJyUTSZmzkW8N78dNgcEcR0Dx1wL8cRzF8'
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(url, json = { 'generalSearchInput': food })
+        
+        if response.status_code == 200:
+            logging.error("Worked!")
+        else:
+            logging.error("Failed: {error}".format(error = response.status_code))
+        
+        return response.json()
 
 if __name__ == '__main__':
    app.run()
