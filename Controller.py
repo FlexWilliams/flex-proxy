@@ -15,12 +15,7 @@ def get():
         url = 'https://api.nal.usda.gov/fdc/v1/search?api_key=L196LsvJyUTSZmzkW8N78dNgcEcR0Dx1wL8cRzF8'
         headers = {'Content-Type': 'application/json'}
         response = requests.post(url, json = { 'generalSearchInput': food })
-        
-        if response.status_code == 200:
-            logging.error("Worked!")
-        else:
-            logging.error("Failed: {error}".format(error = response.status_code))
-        
+                
         return response.json()
 
 if __name__ == '__main__':
